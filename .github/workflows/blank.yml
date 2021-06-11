@@ -27,6 +27,10 @@ jobs:
         uses: actions/setup-node@v2.1.2
         with:
           node-version: 14
+      - name: Setup git
+        run: |
+          git config --global user.name 'wenytang-ms-123'
+          git config --global user.email 'wenytang@wenytang.onmicrosoft.com'
       - name: Setup project
         run: |
           npx lerna bootstrap
