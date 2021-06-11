@@ -1,6 +1,6 @@
 {
   "name": "@alecap7/beta",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "repository": "git@github.com:wenytang-ms-123/TestSecrets.git",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
