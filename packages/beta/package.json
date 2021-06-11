@@ -4,5 +4,6 @@
   "repository": "git@github.com:wenytang-ms-123/TestSecrets.git",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
-  }
+  },
+  "gitHead": "9bfef2f1be9a664ad0c09591434c35237b740ca3"
 }
