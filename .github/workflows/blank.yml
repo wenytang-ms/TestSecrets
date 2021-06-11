@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [ dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,17 +23,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - run: echo ::set-env name=foo::this is foo 1
-      - run: echo current env.foo ${{ env.foo }}
-      # Runs a single command using the runners shell
-      - uses: ./.github/workflows/composite-action/action.yml
+      - name: Setup node
+        uses: actions/setup-node@v2.1.2
         with:
-          your_name: "Octocat"
-        env:
-          foo: this is foo 2
-      - name: test outputs
-        run: | 
-          echo test outputs random: ${{ steps.composite1.outputs.random_number}} 
-          echo test outputs food: ${{ steps.composite1.outputs.food}} 
-
+          node-version: 14
+      - name: release prerelease npm packages to npmjs.org
+        run: |
+          npx lerna publish --canary
