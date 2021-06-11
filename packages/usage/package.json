@@ -1,0 +1,13 @@
+{
+    "name": "@alecap7/usage",
+    "version": "0.1.0",
+    "repository": "git@github.com:wenytang-ms-123/lerna-semantic-versioning-example.git",
+    "dependencies": {
+      "@alecap7/alpha": "^0.2.0",
+      "@alecap7/beta": "^0.2.1"
+    },
+    "publishConfig": {
+      "registry": "https://npm.pkg.github.com/"
+    }
+  }
+  
