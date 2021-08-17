@@ -26,7 +26,7 @@ jobs:
       - name: test env
         id: test
         run: |
-          echo "123123"
+          echo $beyond
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
