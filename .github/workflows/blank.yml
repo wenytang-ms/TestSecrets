@@ -26,7 +26,8 @@ jobs:
       - name: test env
         id: test
         run: |
-          printenv
+          echo "============="
+          echo $testsecret.beyond
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
