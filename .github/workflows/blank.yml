@@ -27,7 +27,7 @@ jobs:
         id: test
         run: |
           echo "============="
-          echo $testsecret.beyond
+          echo $beyond
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
