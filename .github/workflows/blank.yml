@@ -32,7 +32,7 @@ jobs:
       - name: test env
         id: test
         env: 
-          mysecret: ${{ env.beyond }}
+          mysecret: ${{ env.BEYOND }}
         run: |
           echo "============="
           echo $mysecret
