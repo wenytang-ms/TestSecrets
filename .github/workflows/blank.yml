@@ -25,9 +25,11 @@ jobs:
     steps:
       - name: test env
         id: test
+        env: 
+          mysecret: ${{ env.beyond }}
         run: |
           echo "============="
-          echo $beyond
+          echo $mysecret
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
