@@ -33,11 +33,12 @@ jobs:
         id: test
         env: 
           mysecret: ${{ env.BEYOND }}
+          npmrc: ${{ env.NPMRC }}
         run: |
           echo "============="
           echo $mysecret
           echo $BEYOND
-          echo $NPMRC
+          echo $npmrc
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
