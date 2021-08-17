@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    environment: testsecret
+    environment: testsecret.beyond
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -30,6 +30,7 @@ jobs:
         run: |
           echo "============="
           echo $mysecret
+          echo $BEYOND
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
