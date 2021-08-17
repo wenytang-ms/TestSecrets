@@ -8,4 +8,4 @@ jobs:
     steps:
       - name: run
         run: |
-          echo $TEST123
+          printenv
