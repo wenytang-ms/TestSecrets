@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          token: ${{ secrets.CD_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.ref }}
 
       - name: Setup node
@@ -112,7 +112,7 @@ jobs:
         if: ${{ contains(steps.version-change.outputs.CHANGED, 'ms-teams-vscode-extension@') && github.ref == 'refs/heads/dev'  }}
         uses: ncipollo/release-action@v1.7.3
         with:
-          token: ${{ secrets.CD_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag: 'vscode-extension-${{ steps.version-change.outputs.EXTENSION_VERSION_NUM }}'
           artifacts: ./packages/**/*.txt
           prerelease: true
@@ -122,7 +122,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preid == 'rc' }}
         uses: ncipollo/release-action@v1.7.3
         with:
-          token: ${{ secrets.CD_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.vscode-version.outputs.EXTENSION_VERSION }}
           artifacts: ./packages/**/*.txt
           prerelease: true
@@ -132,7 +132,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preid == 'stable' }}
         uses: ncipollo/release-action@v1.7.3
         with:
-          token: ${{ secrets.CD_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.vscode-version.outputs.EXTENSION_VERSION }}
           artifacts: ./packages/**/*.txt
           allowUpdates: true
