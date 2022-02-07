@@ -1,13 +1,138 @@
 name: CD
+
 on:
   workflow_dispatch:
+    inputs:
+      preid:
+        description: "preid name(alpha, rc, stable)"
+        required: true
+        default: "rc"
+      skip-version-rc:
+        description: "release RC version just with lerna publish, skip run lerna version(yes or no)"
+        required: false
+        default: "no"
+      skip-sync-version-pkg:
+        description: "skip sync up target pkg version. input templates to skip sync up version with sdk; fx-core to skip sync up with simpleauth"
+        required: false
+        default: ""
+  schedule:
+    - cron: "0 8 * * *"
 
 jobs:
-  release:
+  cd:
     runs-on: ubuntu-latest
     steps:
-      - name: run
-        env:
-          secrets: ${{ env.TEST123 }}
+      - name: Validate CD branch
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/hotfix/') && github.ref != 'refs/heads/dev' }}
         run: |
-          echo $secrets
+          echo It's not allowed to run CD on other branch except main and dev.
+          exit 1
+
+      - name: Validate inputs for main or hotfix
+        if: ${{ github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/hotfix/')) && github.event.inputs.preid != 'rc' && github.event.inputs.preid != 'stable' }}
+        run: |
+          echo It's not allowed to release alpha on main branch.
+          exit 1
+
+      - name: Valiadte inputs for dev
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev' && github.event.inputs.preid != 'alpha' }}
+        run: |
+          echo It's not allowed to release RC or stable on dev branch.
+          exit 1
+
+      - name: Validate schedule
+        if: ${{ github.event_name == 'schedule' && github.ref != 'refs/heads/dev' }}
+        run: |
+          echo It's not allowed to run schedule release except dev branch.
+          exit 1
+
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.CD_PAT }}
+          ref: ${{ github.ref }}
+
+      - name: Setup node
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 14
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+
+      - name: Setup npm registry
+        run: |
+          echo "${{ secrets.NPMRC }}" > ~/.npmrc
+
+      - name: Setup project
+        run: |
+          npm run setup
+
+      - name: Setup git
+        run: |
+          git config --global user.name 'wenytang-ms'
+          git config --global user.email 'wenytang@wenytang.onmicrosoft.com'
+
+      - name: version change
+        id: version-change
+        run: |
+          echo "::set-output name=CHANGED::$(git tag --points-at HEAD | xargs)"
+          echo "::set-output name=EXTENSION_VERSION::$(git tag --points-at HEAD | grep gama)"
+
+      - name: pack vsix
+        if: ${{ contains(steps.version-change.outputs.CHANGED, 'gama') || (github.event_name == 'workflow_dispatch' && github.event.inputs.preid != 'alpha') }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 10
+          retry_on: error
+          command: |
+            sleep 20
+            cd ./packages/gama
+            touch test.txt
+            stat -f "%Sm" -t "%Y-%m-%d %H:%M" test.txt
+      
+      - name: get version from vscode extension
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preid != 'alpha' }}
+        id: vscode-version
+        run: |
+          if [ ! -z "${{ steps.version-change.outputs.EXTENSION_VERSION }}" ];
+          then
+            echo "::set-output name=EXTENSION_VERSION::$(echo ${{steps.version-change.outputs.EXTENSION_VERSION}})"
+          else
+            vsname=$(cat packages/gama/package.json | jq -r '.name')
+            vsver=$(cat packages/gama/package.json | jq -r'.version')
+            echo "::set-output name=EXTENSION_VERSION::$(echo $vsname@$vsver)"
+          fi
+
+      - name: release daily VSCode extension to github
+        if: ${{ contains(steps.version-change.outputs.CHANGED, 'ms-teams-vscode-extension@') && github.ref == 'refs/heads/dev'  }}
+        uses: ncipollo/release-action@v1.7.3
+        with:
+          token: ${{ secrets.CD_PAT }}
+          tag: 'vscode-extension-${{ steps.version-change.outputs.EXTENSION_VERSION_NUM }}'
+          artifacts: ./packages/**/*.txt
+          prerelease: true
+          allowUpdates: true
+
+      - name: release RC VSCode extension to github
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preid == 'rc' }}
+        uses: ncipollo/release-action@v1.7.3
+        with:
+          token: ${{ secrets.CD_PAT }}
+          tag: ${{ steps.vscode-version.outputs.EXTENSION_VERSION }}
+          artifacts: ./packages/**/*.txt
+          prerelease: true
+          allowUpdates: true
+      
+      - name: release stable VSCode extension to github
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preid == 'stable' }}
+        uses: ncipollo/release-action@v1.7.3
+        with:
+          token: ${{ secrets.CD_PAT }}
+          tag: ${{ steps.vscode-version.outputs.EXTENSION_VERSION }}
+          artifacts: ./packages/**/*.txt
+          allowUpdates: true
