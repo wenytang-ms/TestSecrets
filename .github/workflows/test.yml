@@ -89,7 +89,6 @@ jobs:
             sleep 20
             cd ./packages/gama
             touch test.txt
-            stat -f "%Sm" -t "%Y-%m-%d %H:%M" test.txt
       
       - name: get version from vscode extension
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.preid != 'alpha' }}
