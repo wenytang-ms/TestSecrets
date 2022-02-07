@@ -67,10 +67,6 @@ jobs:
         run: |
           echo "${{ secrets.NPMRC }}" > ~/.npmrc
 
-      - name: Setup project
-        run: |
-          npm run setup
-
       - name: Setup git
         run: |
           git config --global user.name 'wenytang-ms'
