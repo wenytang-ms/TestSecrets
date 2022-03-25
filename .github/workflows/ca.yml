@@ -37,6 +37,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          RELEASE_BRANCHES: release
+          RELEASE_BRANCHES: main
           INITIAL_VERSION: ${{ steps.get-latest-tag.outputs.tag }}
           
