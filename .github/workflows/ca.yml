@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate CD branch
-        if: ${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && (github.ref != 'refs/heads/main' || github.ref != 'refs/heads/develop') }}
         run: |
-          echo It's not allowed to run CD on other branch except main.
+          echo It's not allowed to run CD on other branch except main or develop.
           exit 1
       
       - uses: actions/checkout@v2
@@ -37,6 +37,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          RELEASE_BRANCHES: main
           INITIAL_VERSION: ${{ steps.get-latest-tag.outputs.tag }}
           
