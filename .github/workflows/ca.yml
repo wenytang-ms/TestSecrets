@@ -16,6 +16,8 @@ jobs:
   ca:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: update pkgs
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pkgs }}
         run:
