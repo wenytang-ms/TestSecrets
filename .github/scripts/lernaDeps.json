@@ -7,6 +7,7 @@
     ],
     "gama": [
         "packages/alpha",
-        "packages/beta"
+        "packages/beta",
+        "packages/gama"
     ]
 }
