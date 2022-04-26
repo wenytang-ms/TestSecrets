@@ -1,0 +1,12 @@
+{
+    "alpha": [
+        "packages/alpha"
+    ],
+    "beta": [
+        "packages/beta"
+    ],
+    "gama": [
+        "packages/alpha",
+        "packages/beta"
+    ]
+}
