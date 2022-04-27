@@ -23,6 +23,13 @@ jobs:
         run:
           bash .github/scripts/lerna.sh ${{github.event.inputs.pkgs}}
       
-      - name: check lerna
-        run: |
-          cat lerna.json
+      - name: tag
+        uses: ncipollo/release-action@v1.7.3
+        with:
+          token: ${{ secrets.CD_PAT }}
+          tag: 'v1.2.0'
+          artifacts: ./lerna.json
+
+      - name: send msg
+        run:
+          curl -X POST -F 'url=https://github.com/wenytang-ms/TestSecrets/releases/tag/v1.2.0' https://wenytest04dev8e7fb0bot.azurewebsites.net/api/notification
