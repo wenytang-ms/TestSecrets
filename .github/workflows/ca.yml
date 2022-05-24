@@ -21,17 +21,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: fetch latest tag
-        uses: actions-ecosystem/action-get-latest-tag@v1
-        id: get-latest-tag
+      - name: Setup node
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 14
       
-      - name: output tags
+      - name: Setup git
         run: |
-          echo ${{steps.get-latest-tag.outputs.tag}} > release.txt
-        
+          git config --global user.name 'test'
+          git config --global user.email 'test@test.com'
+
+      - name: release alpha npm packages to npmjs.org
+        run: |
+          npx lerna version prerelease --preid=alpha.$(git rev-parse --short HEAD) --exact --no-push --allow-branch ${GITHUB_REF#refs/*/} --yes
+
+      - name: version change
+        id: version-change
+        run: |
+          echo "::set-output name=CHANGED::$(git tag --points-at HEAD | xargs)"
+      
+      - name: save release info
+        if: ${{ steps.version-change.outputs.CHANGED }}
+        run: |
+          echo ${{steps.version-change.outputs.CHANGED}} > release.txt
+      
       - name: output the tags
+        if: ${{ steps.version-change.outputs.CHANGED }}
         uses: actions/upload-artifact@v3
         with:
           name: release
-          path: ./release.txt
+          path: release.txt
           

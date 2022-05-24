@@ -5,44 +5,53 @@ on:
     workflows: ["CA"]
     branches: ["main", "develop", "ga"]
     types: ["completed"]
-  workflow_dispatch:
-    inputs:
-      url:
-        required: true
-        default: ""
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    if: ${{github.event.inputs.url}}
-    steps:
-      - uses: suisei-cn/actions-download-file@v1
-        id: downloadfile  # Remember to give an ID if you need the output filename
-        name: Download the file
-        with:
-          url: ${{github.event.inputs.url}}
-          target: public/
-
-      - run:  |
-          ls -l public/
   DownloadAndOutput:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      pre_id: ${{ steps.result.outputs.preid }}
+      server_version: ${{ steps.result.outputs.version }}
     steps:
-      - name: download artifact from latest CD pipeline
-        id: down
-        run: |
-          artifactUrl=$(curl https://api.github.com/repos/wenytang-ms/TestSecrets/actions/workflows/22583747/runs | jq -r '.workflow_runs[0].artifacts_url')
-          echo "::set-output name=url::$(curl $artifactUrl|jq -r '.artifacts[0].archive_download_url')"
-        
-      - run: |
-          echo ${{steps.down.outputs.url}}
-      - uses: suisei-cn/actions-download-file@v1
-        id: downloadfile  # Remember to give an ID if you need the output filename
-        name: Download the file
+      - name: Download artifact
+        uses: actions/github-script@v6
         with:
-          url: https://api.github.com/repos/wenytang-ms/TestSecrets/actions/artifacts/249977074
-          target: public/
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "release"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/release.zip`, Buffer.from(download.data));
+      
+      - name: Unzip artifact
+        run: unzip release.zip
+        
+      - name: Get server version
+        id: server
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let content = String(require('fs').readFileSync('./release.txt')).trim();
+            console.log("-------", content);
+            let strArray = content.split(' ')
+            let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))
+            return server
 
-      - run:  |
-          ls -l public/
+      - name: Get result 
+        id: result
+        if: ${{ steps.server.outputs.result }}
+        run: |
+          echo "============================ ${{ steps.server.outputs.result }}"
+          echo ${{steps.server.outputs.result}} | cut -d '@' -f3
