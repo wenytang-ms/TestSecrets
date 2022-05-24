@@ -5,6 +5,7 @@ on:
     workflows: ["CA"]
     branches: ["main", "develop", "ga"]
     types: ["completed"]
+  workflow:
 
 jobs:
   DownloadAndOutput:
@@ -23,7 +24,7 @@ jobs:
         id: downloadfile  # Remember to give an ID if you need the output filename
         name: Download the file
         with:
-          url: ${{steps.down.outputs.url}}
+          url: https://api.github.com/repos/wenytang-ms/TestSecrets/actions/artifacts/249977074
           target: public/
 
       - run:  |
