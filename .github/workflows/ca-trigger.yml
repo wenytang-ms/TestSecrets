@@ -14,8 +14,8 @@ jobs:
       - name: download artifact from latest CD pipeline
         id: down
         run: |
-          artifactUrl=$(curl https://api.github.com/repos/OfficeDev/TeamsFx/actions/workflows/22583747/runs | jq '.workflow_runs[0].artifacts_url')
-          echo "::set-output name=url::$(curl $artifactUrl|jq '.artifacts[0].archive_download_url')"
+          artifactUrl=$(curl https://api.github.com/repos/wenytang-ms/TestSecrets/actions/workflows/22583747/runs | jq -r '.workflow_runs[0].artifacts_url')
+          echo "::set-output name=url::$(curl $artifactUrl|jq -r '.artifacts[0].archive_download_url')"
         
       - run: |
           echo ${{steps.down.outputs.url}}
