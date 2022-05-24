@@ -47,15 +47,10 @@ jobs:
             console.log("-------", content);
             let strArray = content.split(' ')
             let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))
-            let semver = require('semver')
-            if(semver.prerelease(server)){
-              return semver.prerelease(server)
-            }
             return server
 
       - name: Get result 
         id: result
         if: ${{ steps.server.outputs.result }}
         run: |
-          echo "============================ ${{ steps.server.outputs.result[0] }}"
           echo ${{steps.server.outputs.result}}[0]
