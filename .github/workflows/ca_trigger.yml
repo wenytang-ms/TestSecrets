@@ -1,0 +1,22 @@
+name: CA trigger
+
+on:
+  workflow_run:
+    workflows: ["CD"]
+    branches: ["main", "dev", "ga"]
+    types: ["completed"]
+
+jobs:
+  DownloadAndOutput:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      pre_id: ${{ steps.pre_id.outputs.result }}
+      server_version: ${{ steps.server_version.outputs.result }}
+    steps:
+      - name: download artifact from latest CD pipeline
+        id: down
+        run: |
+          id=$(curl https://api.github.com/repos/OfficeDev/TeamsFx/actions/workflows/22583747/runs | jq '.workflow_runs[0].id')
+          gh run download $id -n release.txt
+          cat release.txt

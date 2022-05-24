@@ -18,24 +18,21 @@ jobs:
           exit 1
       
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: fetch latest tag
         uses: actions-ecosystem/action-get-latest-tag@v1
         id: get-latest-tag
       
-      - name: update tag
-        uses: richardsimko/update-tag@v1
-        if: ${{ github.event.inputs.update-tag == 'false' }}
+      - name: output tags
+        run: |
+          echo ${{steps.get-latest-tag.outputs.tag}} > release.txt
+        
+      - name: output the tags
+        if: ${{ steps.version-change.outputs.CHANGED }}
+        uses: actions/upload-artifact@v3
         with:
-          tag_name: ${{ steps.get-latest-tag.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Bump version and push tag
-        if: ${{ github.event.inputs.update-tag != 'false' }}
-        uses: anothrNick/github-tag-action@1.26.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          INITIAL_VERSION: ${{ steps.get-latest-tag.outputs.tag }}
+          name: release
+          path: release.txt
           
