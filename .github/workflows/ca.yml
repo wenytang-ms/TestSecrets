@@ -30,7 +30,6 @@ jobs:
           echo ${{steps.get-latest-tag.outputs.tag}} > release.txt
         
       - name: output the tags
-        if: ${{ steps.version-change.outputs.CHANGED }}
         uses: actions/upload-artifact@v3
         with:
           name: release
