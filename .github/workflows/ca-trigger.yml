@@ -53,4 +53,6 @@ jobs:
         id: result
         if: ${{ steps.server.outputs.result }}
         run: |
-          echo ${{steps.server.outputs.result[0]}}
+          server=${{ steps.server.outputs.result }}
+          server_ver=$(echo ${server[0]} | cut -d '@' -f3)
+          echo $server_ver
