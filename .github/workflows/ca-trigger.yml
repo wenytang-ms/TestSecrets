@@ -6,8 +6,25 @@ on:
     branches: ["main", "develop", "ga"]
     types: ["completed"]
   workflow_dispatch:
+    inputs:
+      url:
+      required: true
+      default: ""
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: ${{github.event.inputs.url}}
+    steps:
+      - uses: suisei-cn/actions-download-file@v1
+        id: downloadfile  # Remember to give an ID if you need the output filename
+        name: Download the file
+        with:
+          url: ${{github.event.inputs.url}}
+          target: public/
+
+      - run:  |
+          ls -l public/
   DownloadAndOutput:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
