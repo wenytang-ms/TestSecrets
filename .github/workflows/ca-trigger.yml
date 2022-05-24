@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
     inputs:
       url:
-      required: true
-      default: ""
+        required: true
+        default: ""
 
 jobs:
   test:
