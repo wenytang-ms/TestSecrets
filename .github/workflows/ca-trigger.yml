@@ -2,8 +2,8 @@ name: CA trigger
 
 on:
   workflow_run:
-    workflows: ["CD"]
-    branches: ["main", "dev", "ga"]
+    workflows: ["CA"]
+    branches: ["main", "develop", "ga"]
     types: ["completed"]
 
 jobs:
