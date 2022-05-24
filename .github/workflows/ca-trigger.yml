@@ -45,7 +45,7 @@ jobs:
           script: |
             let strArray = String(require('fs').readFileSync('./release.txt')).trim().split(' ');
             let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))[0]
-            console.log('------------------', server.split("@")[2])
+            console.log(server, '------------------', server.split("@")[2])
             return server.split("@")[2]
 
       - name: Get server preid 
