@@ -45,6 +45,7 @@ jobs:
           script: |
             let strArray = String(require('fs').readFileSync('./release.txt')).trim().split(' ');
             let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))[0]
+            console.log('------------------', server.split("@")[2])
             return server.split("@")[2]
 
       - name: Get server preid 
@@ -54,9 +55,9 @@ jobs:
           script: |
             let strArray = String(require('fs').readFileSync('./release.txt')).trim().split(' ');
             let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))[0]
-            let version = server.split("@")[2]
-            if(version.split('-')[1]) {
-              return version.split('-')[1].split('.')[0];
+            let version = server.split("@")[2].split('-')[1]
+            if(version) {
+              return version.split('.')[0];
             }
             else {
               return "stable"
@@ -70,10 +71,3 @@ jobs:
         run: |
           echo ================================ ${{needs.downloadAndOutput.outputs.pre_id}}
           echo -------------------------------- ${{needs.downloadAndOutput.outputs.server_version}}}
-      # - name: Call Azure Pipeline
-      #   uses: Azure/pipelines@v1.2
-      #   with:
-      #     azure-devops-project-url: https://devdiv.visualstudio.com/InternalTools
-      #     azure-pipeline-name: TeamsFx-Dev17-CD
-      #     azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-      #     azure-pipeline-variables: '{"PreId": ${{needs.downloadAndOutput.outputs.pre_id}}, "ServerVersion": ${{needs.downloadAndOutput.outputs.server_version}}}'
