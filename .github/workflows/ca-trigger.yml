@@ -15,7 +15,7 @@ jobs:
         id: down
         run: |
           artifactUrl=$(curl https://api.github.com/repos/OfficeDev/TeamsFx/actions/workflows/22583747/runs | jq '.workflow_runs[0].artifacts_url')
-          echo "::set-output name=url::$(curl artifactUrl|jq '.artifacts[0].archive_download_url')"
+          echo "::set-output name=url::$(curl $artifactUrl|jq '.artifacts[0].archive_download_url')"
         
       - uses: suisei-cn/actions-download-file@v1
         id: downloadfile  # Remember to give an ID if you need the output filename
