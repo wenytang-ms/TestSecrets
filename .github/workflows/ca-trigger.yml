@@ -5,7 +5,7 @@ on:
     workflows: ["CA"]
     branches: ["main", "develop", "ga"]
     types: ["completed"]
-  workflow:
+  workflow_dispatch:
 
 jobs:
   DownloadAndOutput:
