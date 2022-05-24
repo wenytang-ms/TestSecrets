@@ -27,4 +27,4 @@ jobs:
           target: public/
 
       - run:  |
-          ls -a public/
+          ls -l public/
