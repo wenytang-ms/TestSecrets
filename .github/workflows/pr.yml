@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: echo branch
         run: |
-          echo ${GITHUB_REF#refs/*/}
+          echo ${GITHUB_BASE_REF}
       - name: checkout branch
         uses: actions/checkout@v2
         with:
