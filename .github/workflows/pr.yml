@@ -41,7 +41,13 @@ jobs:
           git checkout wenyt/tt321
           npm i lerna -g
           lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch wenyt/tt321 --yes
-          echo $(git tag --points-at HEAD)
+
+      - name: get-lerna-version
+        id: lerna-version
+        uses: saulonunesdev/lerna-get-version-action@v1.0.4
+      - name: outputs
+        run: |
+          echo ${{ steps.lerna-version.outputs.lerna-version}}
       - uses: riskledger/update-pr-description@v2
         with:
           body: ${{ env.MY_STRING  }}
