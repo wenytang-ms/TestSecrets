@@ -27,7 +27,7 @@ jobs:
           history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
           history_toolkit=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)
           info=$(echo -e "$history_cli" '\n======================' "$history_toolkit")
-          echo "MY_STRING<<EOF" >> $GITHUB_ENV
+          echo "LERNA_STRING_HISTORY<<EOF" >> $GITHUB_ENV
           echo "$info" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
@@ -40,11 +40,11 @@ jobs:
         run: |
           git checkout ${GITHUB_REF#refs/*/}
           npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch ${GITHUB_REF#refs/*/} --yes
-          echo "MY_TEST<<EOF" >> $GITHUB_ENV
+          echo "LERNA_STRING_INFO<<EOF" >> $GITHUB_ENV
           echo "$(lerna ls --long)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{join([env.MY_TEST, env.MY_STRING], "\r\n")}}
+          body: ${{join(env.LERNA_STRING*, "\r\n")}}
           token: ${{ secrets.GITHUB_TOKEN }}
