@@ -38,8 +38,8 @@ jobs:
       
       - name: lerna version
         run: |
-          git checkout ${GITHUB_REF#refs/*/}
-          npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch ${GITHUB_REF#refs/*/} --yes
+          git checkout wenyt/tt321
+          npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch wenyt/tt321 --yes
           echo "LERNA_STRING.INFO<<EOF" >> $GITHUB_ENV
           echo "$(lerna ls --long)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
