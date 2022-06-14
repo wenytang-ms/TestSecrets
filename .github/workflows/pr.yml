@@ -26,7 +26,7 @@ jobs:
           head=$(git describe --first-parent --abbrev=0)
           history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
           history_toolkit=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)
-          info=$(echo -e "$history_cli" '\n======================' "$history_toolkit")
+          info=$(echo -e 'CLI feat commits: \n' "$history_cli" '\n\nExtension-toolkit feat commits:\n' "$history_toolkit")
           echo "LERNA_HISTORY<<EOF" >> $GITHUB_ENV
           echo "$info" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -40,14 +40,14 @@ jobs:
         run: |
           npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch ${{ github.event.pull_request.head.ref }} --yes
           echo "LERNA_PKG_INFO<<EOF" >> $GITHUB_ENV
-          echo "$(lerna ls --long)" >> $GITHUB_ENV
+          echo "$(npx lerna changed -l)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - uses: actions/github-script@v6
         id: set-output
         with:
           script: |
-            core.setOutput("output1", `${{ env.LERNA_PKG_INFO }}\n${{ env.LERNA_HISTORY }}`); 
+            core.setOutput("output1", `${{ env.LERNA_PKG_INFO }}\n\n${{ env.LERNA_HISTORY }}`); 
       
       - uses: riskledger/update-pr-description@v2
         with:
