@@ -22,8 +22,8 @@ jobs:
         run: | 
           head=$(git describe --first-parent --abbrev=0)
           history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
-          echo "::set-output name=mix-ecto_create::$(echo $head)\n"
-          echo "::set-output name=mix-ecto_create::$(echo $history_cli)\n"
+          echo "::set-output name=descrption0::$(echo $head)"
+          echo "::set-output name=descrption1::$(echo $history_cli)"
           
       - uses: riskledger/update-pr-description@v2
         with:
