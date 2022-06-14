@@ -11,16 +11,20 @@ jobs:
     if: ${{ github.event_name ==  'pull_request' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.CD_PAT }}
+          ref: ${{ github.ref }}
       - name: check feature history
         id: description
         run: | 
-          echo "1231231231231232"
-          echo '9989890arefoeit'
-      - name: output
-        run:
-          echo ${{ steps.description.outputs.description }}
-      # - uses: riskledger/update-pr-description@v2
-      #   with:
-      #     body: ${{ steps.description.outputs.description }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+          head=$(git describe --first-parent --abbrev=0)
+          echo '::set-output name=mix-ecto_create::$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)\n'
+          echo '::set-output name=mix-ecto_create::$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)\n'
+          
+      - uses: riskledger/update-pr-description@v2
+        with:
+          body: ${{join(steps.description.outputs.*, '\n')}}
+          token: ${{ secrets.GITHUB_TOKEN }}
