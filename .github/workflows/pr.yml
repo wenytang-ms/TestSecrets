@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: echo branch
         run: |
-          echo ${{github.event.pull_request.base.ref}}
+          echo ${GITHUB_REF#refs/*/}
       - name: checkout branch
         uses: actions/checkout@v2
         with:
@@ -38,9 +38,8 @@ jobs:
       
       - name: lerna version
         run: |
-          git checkout wenyt/tt321
-          npm i lerna -g
-          lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch wenyt/tt321 --yes
+          git checkout ${GITHUB_REF#refs/*/}
+          npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch ${GITHUB_REF#refs/*/} --yes
           echo "MY_TEST<<EOF" >> $GITHUB_ENV
           echo "$(lerna ls --long)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
