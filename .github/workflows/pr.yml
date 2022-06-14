@@ -44,10 +44,8 @@ jobs:
           echo "MY_TEST<<EOF" >> $GITHUB_ENV
           echo "$(lerna ls --long)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          echo "${{env.MY_STRING}}" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
       
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{ env.MY_TEST  }}
+          body: ${{ join(env.MY_TEST, env.MY_STRING ) }}
           token: ${{ secrets.GITHUB_TOKEN }}
