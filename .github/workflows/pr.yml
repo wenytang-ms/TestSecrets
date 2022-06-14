@@ -41,16 +41,13 @@ jobs:
           git checkout wenyt/tt321
           npm i lerna -g
           lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch wenyt/tt321 --yes
-
-      - name: get-lerna-version
-        id: lerna-version-cli
-        uses: saulonunesdev/lerna-get-version-action@v1.0.4
-        with:
-          path: packages/alpha
-      - name: ddd
-        run: |
-          echo ${{ steps.lerna-version-cli.outputs.lerna-version}}
+          echo "MY_TEST<<EOF" >> $GITHUB_ENV
+          echo "$(lerna ls --long)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo ${{env.MY_STRING}} >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{ env.MY_STRING  }}
+          body: ${{ env.MY_TEST  }}
           token: ${{ secrets.GITHUB_TOKEN }}
