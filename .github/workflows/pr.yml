@@ -30,7 +30,15 @@ jobs:
           echo "MY_STRING<<EOF" >> $GITHUB_ENV
           echo "$info" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          
+
+      - name: Setup node
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 14
+
+      - run: |
+          npx lerna version --conventional-commits --conventional-prerelease --preid=rc --no-push --allow-branch wenyt/tt123 --yes
+          echo $(git tag --points-at HEAD)  
       - uses: riskledger/update-pr-description@v2
         with:
           body: ${{ env.MY_STRING  }}
