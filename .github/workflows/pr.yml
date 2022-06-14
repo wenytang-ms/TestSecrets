@@ -1,0 +1,32 @@
+name: "Lint PR"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+jobs:
+  attension-on-version:
+    if: ${{ github.event_name ==  'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.CD_PAT }}
+          ref: ${{ github.ref }}
+      - name: check feature history
+        id: description
+        run: | 
+          head=$(git describe --first-parent --abbrev=0)
+          git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha 
+          git log --pretty=format:"%s %h" $head...HEAD -- packages/beta
+      - name: output
+        run:
+          echo ${{ steps.description.outputs.description }}
+      # - uses: riskledger/update-pr-description@v2
+      #   with:
+      #     body: ${{ steps.description.outputs.description }}
+      #     token: ${{ secrets.GITHUB_TOKEN }}
