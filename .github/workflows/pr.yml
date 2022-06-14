@@ -8,7 +8,7 @@ on:
       - synchronize
 jobs:
   attension-on-version:
-    if: ${{ github.event_name ==  'pull_request' }}
+    if: ${{ github.event_name ==  'pull_request' && github.base_ref == 'refs/heads/develop' }}
     runs-on: ubuntu-latest
     steps:
       - name: checkout branch
