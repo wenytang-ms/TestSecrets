@@ -22,10 +22,11 @@ jobs:
         run: | 
           head=$(git describe --first-parent --abbrev=0)
           history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
-          echo "::set-output name=descrption0::$(echo $head)\n"
-          echo "::set-output name=descrption1::$(echo $history_cli)"
+          history_toolkit=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)
+          info=$(echo -e $history_cli '\n' $history_toolkit)
+          echo "::set-output name=descrption::$(echo $info)"
           
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{join(steps.description.outputs.*, '\n')}}
+          body: ${{ steps.description.outputs.info }}
           token: ${{ secrets.GITHUB_TOKEN }}
