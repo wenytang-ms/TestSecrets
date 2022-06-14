@@ -48,10 +48,9 @@ jobs:
         id: set-output
         with:
           script: |
-            core.setOutput("output1", `${{ env.LERNA_PKG_INFO }}`); 
-            core.setOutput("output2", `${{ env.LERNA_HISTORY }}`) 
+            core.setOutput("output1", `${{ env.LERNA_PKG_INFO }}\n${{ env.LERNA_HISTORY }}`); 
       
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{join(steps.set-output.outputs.*, '\n')}}
+          body: ${{steps.set-output.outputs.output1}}
           token: ${{ secrets.GITHUB_TOKEN }}
