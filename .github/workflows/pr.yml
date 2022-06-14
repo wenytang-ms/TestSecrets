@@ -38,6 +38,7 @@ jobs:
       
       - name: lerna version
         run: |
+          git checkout wenyt/tt321
           npm i lerna -g
           lerna version --conventional-commits --conventional-prerelease --no-push --allow-branch wenyt/tt321 --yes
           
