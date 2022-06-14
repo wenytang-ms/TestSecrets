@@ -20,9 +20,6 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.ref }}
-      - uses: actions/setup-node@v2.1.2
-        with:
-          node-version: 14
       - name: check feature history
         id: description
         run: | 
@@ -33,13 +30,6 @@ jobs:
           echo "MY_STRING<<EOF" >> $GITHUB_ENV
           echo "$info" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
-      - name: get tags
-        id: tags
-        run: |
-          npm i
-          npx lerna version --conventional-commits --conventional-prerelease --preid=rc --amend --allow-branch ${GITHUB_REF#refs/*/} --yes
-          echo $(git tag --points-at HEAD)
           
       - uses: riskledger/update-pr-description@v2
         with:
