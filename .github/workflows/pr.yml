@@ -11,18 +11,12 @@ jobs:
     if: ${{ github.event_name ==  'pull_request' }}
     runs-on: ubuntu-latest
     steps:
-      - name: checkout branch
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.CD_PAT }}
-          ref: ${{ github.ref }}
+      - uses: actions/checkout@v3
       - name: check feature history
         id: description
         run: | 
-          head=$(git describe --first-parent --abbrev=0)
-          git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha 
-          git log --pretty=format:"%s %h" $head...HEAD -- packages/beta
+          echo "1231231231231232"
+          echo '9989890arefoeit'
       - name: output
         run:
           echo ${{ steps.description.outputs.description }}
