@@ -24,9 +24,9 @@ jobs:
           history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
           history_toolkit=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)
           info=$(echo -e "$history_cli" '\n' "$history_toolkit")
-          echo "info=/"$info/"" >> $GITHUB_ENV
+          echo "::set-output name=content::$info"
           
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{ env.info }}
+          body: ${{ steps.description.outputs.content }}
           token: ${{ secrets.GITHUB_TOKEN }}
