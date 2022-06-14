@@ -38,7 +38,7 @@ jobs:
         id: tags
         run: |
           npm i
-          npx lerna version --conventional-commits --conventional-prerelease --preid=rc --no-push --allow-branch ${GITHUB_REF#refs/*/} --yes
+          npx lerna version --conventional-commits --conventional-prerelease --preid=rc --no-push --amend --allow-branch ${GITHUB_REF#refs/*/} --yes
           echo $(git tag --points-at HEAD)
           
       - uses: riskledger/update-pr-description@v2
