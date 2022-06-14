@@ -37,8 +37,8 @@ jobs:
           node-version: 14
 
       - run: |
-        npx lerna version --conventional-commits --conventional-prerelease --preid=rc --no-push --allow-branch wenyt/test123 --yes
-        echo $(git tag --points-at HEAD)  
+          npx lerna version --conventional-commits --conventional-prerelease --preid=rc --no-push --allow-branch wenyt/tt123 --yes
+          echo $(git tag --points-at HEAD)  
       - uses: riskledger/update-pr-description@v2
         with:
           body: ${{ env.MY_STRING  }}
