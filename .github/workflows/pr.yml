@@ -13,13 +13,13 @@ jobs:
     steps:
       - name: echo branch
         run: |
-          echo ${GITHUB_BASE_REF}
+          echo ${{ github.event.pull_request.head.ref }}
       - name: checkout branch
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: check feature history
         id: description
         run: | 
@@ -38,8 +38,7 @@ jobs:
       
       - name: lerna version
         run: |
-          git checkout wenyt/tt321
-          npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch wenyt/tt321 --yes
+          npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch ${{ github.event.pull_request.head.ref }} --yes
           echo "LERNA_PKG_INFO<<EOF" >> $GITHUB_ENV
           echo "$(lerna ls --long)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
