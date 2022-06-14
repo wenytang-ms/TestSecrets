@@ -30,6 +30,16 @@ jobs:
           echo "MY_STRING<<EOF" >> $GITHUB_ENV
           echo "$info" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
+      - name: Setup node
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 14
+      
+      - name: lerna version
+        run: |
+          npm i lerna -g
+          lerna version --conventional-commits --conventional-prerelease --no-push --allow-branch wenyt/tt321 --yes
           
       - uses: riskledger/update-pr-description@v2
         with:
