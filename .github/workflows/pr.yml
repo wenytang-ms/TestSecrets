@@ -43,6 +43,15 @@ jobs:
           echo "LERNA_STRING.INFO<<EOF" >> $GITHUB_ENV
           echo "$(lerna ls --long)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
+      - name: output env
+        run: |
+          echo '============================='
+          echo ${{env.LERNA_STRING.INFO}}
+          echo '==============================='
+          echo ${{env.LERNA_STRING.HISTORY}}
+          echo '=================================='
+          echo ${{ join(env.LERNA_STRING*, '\n') }}
       
       - uses: riskledger/update-pr-description@v2
         with:
