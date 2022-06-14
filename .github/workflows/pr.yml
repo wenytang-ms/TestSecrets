@@ -51,7 +51,7 @@ jobs:
           echo '==============================='
           echo ${{env.LERNA_STRING.HISTORY}}
           echo '=================================='
-          echo ${{ join(env.LERNA_STRING*, '\n') }}
+          echo ${{ join(env.LERNA_STRING.*, '\n') }}
       
       - uses: riskledger/update-pr-description@v2
         with:
