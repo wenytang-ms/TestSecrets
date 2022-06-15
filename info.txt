@@ -1,8 +1,0 @@
-@microsoft/adaptivecards-tools  v1.0.1-alpha.0 packages/adaptivecards-tools-sdk
-@microsoft/teamsfx-api         v0.20.1-alpha.0 packages/api
-@microsoft/teamsfx-cli          v1.1.0-alpha.0 packages/cli
-@microsoft/teamsfx-core        v1.11.0-alpha.0 packages/fx-core
-@microsoft/teams-manifest       v0.0.5-alpha.0 packages/manifest
-@microsoft/teamsfx              v1.0.1-alpha.0 packages/sdk
-@microsoft/teamsfx-react        v1.0.1-alpha.0 packages/sdk-react
-ms-teams-vscode-extension       v4.1.0-alpha.0 packages/vscode-extension
