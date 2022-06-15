@@ -38,15 +38,14 @@ jobs:
       #     npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch ${{ github.event.pull_request.head.ref }} --yes
       #     npx lerna changed -l > info.txt
 
-      - uses: actions/github-script@v6
-        id: set-output
+      - uses: edwardgeorge/file-outputs-action@main
+        id: test
         with:
-          script: |
-            const info = require('fs').readFileSync('./info.txt', {encoding:'utf8', flag:'r'})
-            const history = require('fs').readFileSync('./history.txt', {encoding:'utf8', flag:'r'})
-            return info + '\n' + history
+          files: |
+            output1=info.txt
+            output2=history.txt
       
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{steps.set-output.outputs.result}}
+          body: ${{join(steps.test.outputs.*, '\n')}}
           token: ${{ secrets.GITHUB_TOKEN }}
