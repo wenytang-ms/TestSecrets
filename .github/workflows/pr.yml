@@ -36,7 +36,7 @@ jobs:
       - name: lerna version
         run: |
           npx lerna version --conventional-commits --conventional-prerelease --preid=rc --no-git-tag-version --no-push --allow-branch ${{ github.event.pull_request.head.ref }} --yes
-          npx lerna changed -l | awk '{ print $1, $2 }'> info.txt
+          npx lerna changed -l| awk '{printf("|%35s|%15s|\n", $1, $2)}'> info.txt
 
       - uses: edwardgeorge/file-outputs-action@main
         id: test
