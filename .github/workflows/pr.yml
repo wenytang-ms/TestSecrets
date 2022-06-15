@@ -42,8 +42,8 @@ jobs:
         id: test
         with:
           files: |
-            ! output1=info.txt
-            ! output2=history.txt
+            !output1=info.txt
+            !output2=history.txt
       
       - uses: riskledger/update-pr-description@v2
         with:
