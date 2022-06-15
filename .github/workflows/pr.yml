@@ -42,9 +42,9 @@ jobs:
         id: set-output
         with:
           script: |
-            let infoArray = String(require('fs').readFileSync('./info.txt'))
-            let historyArray = String(require('fs').readFileSync('./history.txt'))
-            return infoArray + '\n' + historyArray
+            const info = require('fs').readFileSync('./info.txt', {encoding:'utf8', flag:'r'})
+            const history = require('fs').readFileSync('./history.txt', {encoding:'utf8', flag:'r'})
+            return info + '\n' + history
       
       - uses: riskledger/update-pr-description@v2
         with:
