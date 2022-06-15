@@ -42,8 +42,8 @@ jobs:
         id: set-output
         with:
           script: |
-            let infoArray = String(require('fs').readFileSync('./info.txt')).trim()
-            let historyArray = String(require('fs').readFileSync('./history.txt')).trim()
+            let infoArray = String(require('fs').readFileSync('./info.txt'))
+            let historyArray = String(require('fs').readFileSync('./history.txt'))
             return infoArray + '\n' + historyArray
       
       - uses: riskledger/update-pr-description@v2
