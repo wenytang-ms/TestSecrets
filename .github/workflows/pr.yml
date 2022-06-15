@@ -41,7 +41,7 @@ jobs:
       - uses: edwardgeorge/file-outputs-action@main
         id: test
         with:
-          files: | utf-8
+          files: |
             ! output1=info.txt
             ! output2=history.txt
       
