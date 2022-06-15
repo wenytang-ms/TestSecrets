@@ -41,9 +41,9 @@ jobs:
       - uses: edwardgeorge/file-outputs-action@main
         id: test
         with:
-          files: |
-            output1=info.txt
-            output2=history.txt
+          files: | utf-8
+            ! output1=info.txt
+            ! output2=history.txt
       
       - uses: riskledger/update-pr-description@v2
         with:
