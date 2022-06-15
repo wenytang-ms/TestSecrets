@@ -26,10 +26,7 @@ jobs:
           head=$(git describe --first-parent --abbrev=0)
           history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
           history_toolkit=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)
-          info=$(echo -e 'CLI feat commits: \n' "$history_cli" '\n\nExtension-toolkit feat commits:\n' "$history_toolkit")
-          echo "LERNA_HISTORY<<EOF" >> $GITHUB_ENV
-          echo "$info" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo -e 'CLI feat commits: \n' "$history_cli" '\n\nExtension-toolkit feat commits:\n' "$history_toolkit" > history.txt
 
       - name: Setup node
         uses: actions/setup-node@v2.1.2
@@ -39,17 +36,17 @@ jobs:
       - name: lerna version
         run: |
           npx lerna version --conventional-commits --conventional-prerelease --no-git-tag-version --no-push --allow-branch ${{ github.event.pull_request.head.ref }} --yes
-          echo "LERNA_PKG_INFO<<EOF" >> $GITHUB_ENV
-          echo "$(npx lerna changed -l)" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          npx lerna changed -l > info.txt
 
       - uses: actions/github-script@v6
         id: set-output
         with:
           script: |
-            core.setOutput("output1", `${{ env.LERNA_PKG_INFO }}\n\n${{ env.LERNA_HISTORY }}`); 
+            let infoArray = String(require('fs').readFileSync('./info.txt')).trim()
+            let historyArray = String(require('fs').readFileSync('./history.txt')).trim()
+            return infoArray + '\n' + historyArray
       
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${{steps.set-output.outputs.output1}}
+          body: ${{steps.set-output.outputs.result}}
           token: ${{ secrets.GITHUB_TOKEN }}
