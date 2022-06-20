@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: release stable VSCode extension to github
-        uses: ncipollo/release-action@v1.7.3
+        uses: ncipollo/release-action@v1.10.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v40.20.30
