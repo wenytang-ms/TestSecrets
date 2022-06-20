@@ -23,5 +23,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v10.20.30
-          artifacts: ./packages/**/*.vsix
+          artifacts: ./packages/**/*.txt
           artifactErrorsFailBuild: true
