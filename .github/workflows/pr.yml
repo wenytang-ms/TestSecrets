@@ -21,6 +21,6 @@ jobs:
         uses: ncipollo/release-action@v1.10.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v40.20.30
+          tag: v5.20.30
           artifacts: ./packages/**/*.visx
           artifactErrorsFailBuild: true
