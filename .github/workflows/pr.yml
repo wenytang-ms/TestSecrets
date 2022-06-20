@@ -16,36 +16,12 @@ jobs:
           echo ${{ github.event.pull_request.head.ref }}
       - name: checkout branch
         uses: actions/checkout@v2
+        
+      - name: release stable VSCode extension to github
+        if: ${{ contains(steps.version-change.outputs.CHANGED, 'ms-teams-vscode-extension@') && github.event_name == 'workflow_dispatch' && github.event.inputs.preid == 'stable' }}
+        uses: ncipollo/release-action@v1.7.3
         with:
-          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: check feature history
-        id: description
-        run: | 
-          head=$(git describe --first-parent --abbrev=0)
-          history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
-          history_toolkit=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)
-          echo -e '\nCLI feat commits: \n' "$history_cli" '\n\nExtension-toolkit feat commits:\n' "$history_toolkit" > history.txt
-
-      - name: Setup node
-        uses: actions/setup-node@v2.1.2
-        with:
-          node-version: 14
-      
-      - name: lerna version
-        run: |
-          npx lerna version --conventional-commits --conventional-prerelease --preid=rc --no-git-tag-version --no-push --allow-branch ${{ github.event.pull_request.head.ref }} --yes
-          npx lerna changed -l| awk '{printf("|%35s|%15s|\n", $1, $2)}'> info.txt
-
-      - uses: edwardgeorge/file-outputs-action@main
-        id: test
-        with:
-          files: |
-            !output1=info.txt
-            !output2=history.txt
-      
-      - uses: riskledger/update-pr-description@v2
-        with:
-          body: ${{join(steps.test.outputs.*, '')}}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v10.20.30
+          artifacts: ./packages/**/*.vsix
+          artifactErrorsFailBuild: true
