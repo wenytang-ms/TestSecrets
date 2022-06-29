@@ -57,7 +57,7 @@ jobs:
         with: 
           script: |
             let var = ${{steps.version.outputs.result}}
-            console.log("=========== version is:" var)
+            console.log("=========== version is:", var)
 
       # - name: Get server preid 
       #   id: preid
