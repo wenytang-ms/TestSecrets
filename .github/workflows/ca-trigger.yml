@@ -43,7 +43,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let rawData = require('fs').readFileSync('version.json', {encoding: 'utf8', flag: 'r'})
+            let rawData = require('fs').readFileSync('release.json', {encoding: 'utf8', flag: 'r'})
             let pkgs = JSON.parse(rawData)
             for(let pkg of pkgs) {
               if(pkg.name === "@wenyt-ms/gama") {
