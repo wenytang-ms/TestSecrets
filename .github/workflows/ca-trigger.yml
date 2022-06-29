@@ -55,7 +55,7 @@ jobs:
       - name: echo output
         uses: actions/github-script@v6
         with: 
-          scripts: |
+          script: |
             let var = ${{steps.version.outputs.result}}
             console.log("=========== version is:" var)
 
