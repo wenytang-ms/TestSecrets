@@ -44,11 +44,17 @@ jobs:
         if: ${{ steps.version-change.outputs.CHANGED }}
         run: |
           echo ${{steps.version-change.outputs.CHANGED}} > release.txt
+
+      - name: save pkg info
+        run: |
+          lerna ls --all --json > release.json
       
       - name: output the tags
         if: ${{ steps.version-change.outputs.CHANGED }}
         uses: actions/upload-artifact@v3
         with:
           name: release
-          path: release.txt
+          path: |
+            release.txt
+            release.json
           

@@ -43,25 +43,36 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let strArray = String(require('fs').readFileSync('./release.txt')).trim().split(' ');
-            let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))[0]
-            console.log(server, '------------------', server.split("@")[2])
-            return server.split("@")[2]
+            let rawData = require('fs').readFileSync('version.json', {encoding: 'utf8', flag: 'r'})
+            let pkgs = JSON.parse(rawData)
+            for(let pkg of pkgs) {
+              if(pkg.name === "@wenyt-ms/gama") {
+                console.log('======= version: ', pkg.version)
+                return pkg.version
+              }
+            }
 
-      - name: Get server preid 
-        id: preid
+      - name: echo output
         uses: actions/github-script@v6
-        with:
-          script: |
-            let strArray = String(require('fs').readFileSync('./release.txt')).trim().split(' ');
-            let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))[0]
-            let version = server.split("@")[2].split('-')[1]
-            if(version) {
-              return version.split('.')[0];
-            }
-            else {
-              return "stable"
-            }
+        with: 
+          scripts: |
+            let var = ${{steps.version.outputs.result}}
+            console.log("=========== version is:" var)
+
+      # - name: Get server preid 
+      #   id: preid
+      #   uses: actions/github-script@v6
+      #   with:
+      #     script: |
+      #       let strArray = String(require('fs').readFileSync('./release.txt')).trim().split(' ');
+      #       let server = strArray.filter(item => item.includes('@wenyt-ms/gama'))[0]
+      #       let version = server.split("@")[2].split('-')[1]
+      #       if(version) {
+      #         return version.split('.')[0];
+      #       }
+      #       else {
+      #         return "stable"
+      #       }
 
   CallAzurePipeline:
     runs-on: ubuntu-latest
