@@ -13,14 +13,25 @@ jobs:
     steps:
       - name: echo branch
         run: |
-          echo ${{ github.event.pull_request.head.ref }}
+          echo ${{github.event.pull_request.base.ref}}
       - name: checkout branch
         uses: actions/checkout@v2
-        
-      - name: release stable VSCode extension to github
-        uses: ncipollo/release-action@v1.10.0
         with:
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v5.20.30
-          artifacts: ./packages/**/*.visx
-          artifactErrorsFailBuild: true
+          ref: ${{ github.ref }}
+      - name: check feature history
+        id: description
+        run: | 
+          head=$(git describe --first-parent --abbrev=0)
+          history_cli=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/alpha)
+          history_toolkit=$(git log --pretty=format:"%s %h" $head...HEAD -- packages/beta)
+          info=$(echo -e "$history_cli" '\n======================' "$history_toolkit")
+          echo "MY_STRING<<EOF" >> $GITHUB_ENV
+          echo "$info" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+      - uses: riskledger/update-pr-description@v2
+        with:
+          body: ${{ env.MY_STRING  }}
+          token: ${{ secrets.GITHUB_TOKEN }}
